@@ -1,12 +1,12 @@
-# Terraform Wrappers 🚀
+# Terraform Wrappers
 
 A comprehensive collection of reusable Terraform wrapper modules for AWS infrastructure provisioning. These wrappers simplify and standardize the deployment of common AWS resources while maintaining flexibility and best practices.
 
-## 📋 Overview
+## Overview
 
-This project provides **9 carefully crafted Terraform wrapper modules** that abstract away complexity while providing a clean, intuitive interface for provisioning AWS infrastructure. Each wrapper is designed to handle multiple resources of the same type through a map-based configuration approach.
+This project provides Terraform wrapper modules that abstract away complexity while providing a clean interface for provisioning AWS infrastructure. Each wrapper is designed to handle multiple resources of the same type through a map-based configuration approach.
 
-## 📦 Available Wrappers
+## Available Wrappers
 
 | Wrapper | Description | Use Case |
 |---------|-------------|----------|
@@ -29,7 +29,7 @@ This project provides **9 carefully crafted Terraform wrapper modules** that abs
 ✨ **Terraform 5.0+** - Compatible with latest Terraform and AWS provider versions  
 ✨ **Tagging Support** - Built-in support for resource tagging and organization  
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -202,7 +202,7 @@ terraform {
 }
 ```
 
-## 🎓 Best Practices
+##  Best Practices
 
 1. **Use Separate State Files** - Consider using remote state for production environments
 2. **Organize Variables** - Create `terraform.tfvars` files for different environments
@@ -242,18 +242,18 @@ Contributions are welcome! Please ensure:
 - Examples are provided in the README
 - Security best practices are followed
 
-## 📄 License
+##  License
 
 See the [LICENSE](LICENSE) file for details.
 
-## 💡 Tips & Tricks
+##  Tips & Tricks
 
 - **Parallel Deployment** - Multiple wrappers can be used together in the same configuration
 - **Reusability** - Each wrapper can be called multiple times with different configurations
 - **Flexible Sizing** - Optional parameters allow for both minimal and advanced configurations
 - **Output Values** - Check each wrapper's `outputs.tf` for available output variables
 
-## 🆘 Troubleshooting
+##  Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
@@ -262,7 +262,7 @@ See the [LICENSE](LICENSE) file for details.
 | Permission denied | Verify AWS credentials are configured properly |
 | State file issues | Use `terraform refresh` to sync state |
 
-## 📚 Additional Resources
+##  Additional Resources
 
 - [AWS Provider Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest)
 - [Terraform Official Docs](https://www.terraform.io/docs)
