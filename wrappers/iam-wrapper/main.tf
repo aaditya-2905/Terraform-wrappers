@@ -1,23 +1,35 @@
-module "role" {
-  for_each = var.roles
+locals {
+  # Common tags for all resources
+  common_tags = merge(
+    var.tags,
+    {
+      created_by = "terraform"
+      module     = "iam-wrapper"
+    }
+  )
+}
 
+module "iam" {
   source = "aaditya-2905/iam/aws"
 
-  name               = each.value.name
-  assume_role_policy = each.value.assume_role_policy
-  policy_arns        = lookup(each.value, "policy_arns", [])
-  inline_policies    = lookup(each.value, "inline_policies", {})
-  max_session_duration = lookup(each.value, "max_session_duration", 3600)
-  description        = lookup(each.value, "description", "")
-  tags               = lookup(each.value, "tags", {})
+  # Multi-resource configuration
+  users              = var.users
+  roles              = var.roles
+  policies           = var.policies
+  groups             = var.groups
+  policy_attachments = var.policy_attachments
+  group_memberships  = var.group_memberships
+
+  # Common configuration
+  tags = local.common_tags
 }
 
 output "role_arns" {
   description = "ARNs of created IAM roles"
-  value       = { for k, v in module.role : k => v.role_arn }
+  value       = try(module.iam.role_arns, {})
 }
 
-output "role_names" {
-  description = "Names of created IAM roles"
-  value       = { for k, v in module.role : k => v.role_name }
+output "user_arns" {
+  description = "ARNs of created IAM users"
+  value       = try(module.iam.user_arns, {})
 }

@@ -1,14 +1,34 @@
+locals {
+  vpcs = var.vpcs
+
+  common_tags = merge(
+    var.common_tags,
+    {
+      created_by = "terraform"
+      module     = "vpc-wrapper"
+    }
+  )
+}
+
 module "vpc" {
-  for_each = var.vpcs
+  for_each = local.vpcs
 
   source = "aaditya-2905/vpc/aws"
 
-  name                 = each.value.name
-  cidr_block           = each.value.cidr_block
-  enable_dns_hostnames = lookup(each.value, "enable_dns_hostnames", true)
-  enable_dns_support   = lookup(each.value, "enable_dns_support", true)
-  enable_nat_gateway   = lookup(each.value, "enable_nat_gateway", false)
-  tags                 = lookup(each.value, "tags", {})
+  vpc_cidr_block             = each.value.cidr_block
+  public_subnet_cidr_blocks  = each.value.public_subnet_cidr_blocks
+  private_subnet_cidr_blocks = each.value.private_subnet_cidr_blocks
+  availability_zones         = each.value.availability_zones
+  enable_nat_gateway         = each.value.enable_nat_gateway
+  single_nat_gateway         = each.value.single_nat_gateway
+
+  additional_tags = merge(
+    local.common_tags,
+    each.value.tags,
+    {
+      Name = each.value.name
+    }
+  )
 }
 
 output "vpc_ids" {

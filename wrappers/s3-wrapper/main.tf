@@ -1,11 +1,23 @@
+locals {
+  # Merge common tags with user tags
+  tags = merge(
+    var.common_tags,
+    var.tags,
+    {
+      created_by = "terraform"
+      module     = "s3-wrapper"
+    }
+  )
+}
+
 module "s3" {
-  source = "./modules/s3"
+  source = "aaditya-2905/s3/aws"
 
   bucket        = var.bucket
   bucket_prefix = var.bucket_prefix
   force_destroy = var.force_destroy
 
-  tags = var.tags
+  tags = local.tags
 
   bucket_policy       = var.bucket_policy
   public_access_block = var.public_access_block

@@ -1,3 +1,15 @@
+variable "aws_region" {
+  description = "AWS region where resources will be deployed"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "common_tags" {
+  description = "Common tags to apply to the S3 bucket"
+  type        = map(string)
+  default     = {}
+}
+
 variable "bucket" {
   description = "Name of the S3 bucket"
   type        = string

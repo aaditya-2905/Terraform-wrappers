@@ -1,27 +1,38 @@
-module "instance" {
-  for_each = var.instances
+locals {
+  # Use provided AMI
+  ami = var.ami
+
+  # Common tags for all resources
+  common_tags = merge(
+    var.tags,
+    {
+      created_by  = "terraform"
+      module      = "ec2-wrapper"
+      environment = var.environment
+    }
+  )
+}
+
+module "ec2" {
+  for_each = var.create_instances ? toset(var.instance_names) : []
 
   source = "aaditya-2905/ec2/aws"
 
-  name                    = each.value.name
-  ami                     = each.value.ami
-  instance_type           = each.value.instance_type
-  subnet_id               = each.value.subnet_id
-  security_groups         = lookup(each.value, "security_groups", [])
-  key_name                = lookup(each.value, "key_name", null)
-  associate_public_ip_address = lookup(each.value, "associate_public_ip_address", false)
-  root_volume_size        = lookup(each.value, "root_volume_size", 20)
-  root_volume_type        = lookup(each.value, "root_volume_type", "gp2")
-  monitoring              = lookup(each.value, "monitoring", false)
-  tags                    = lookup(each.value, "tags", {})
+  environment   = var.environment
+  ami           = local.ami
+  instance_type = var.instance_type
+  subnet_id     = var.subnet_id
+  sg_id         = var.sg_id
+
+  tags = local.common_tags
 }
 
 output "instance_ids" {
   description = "IDs of created EC2 instances"
-  value       = { for k, v in module.instance : k => v.instance_id }
+  value       = { for k, v in module.ec2 : k => v.instance_id }
 }
 
 output "instance_private_ips" {
   description = "Private IPs of created EC2 instances"
-  value       = { for k, v in module.instance : k => v.private_ip }
+  value       = { for k, v in module.ec2 : k => v.private_ip }
 }

@@ -1,18 +1,41 @@
+locals {
+  # Map-based configuration for CloudFront distributions
+  distributions = var.distributions
+
+  # Common tags for all resources
+  common_tags = merge(
+    var.common_tags,
+    {
+      created_by = "terraform"
+      module     = "cloudfront-wrapper"
+    }
+  )
+}
+
 module "distribution" {
-  for_each = var.distributions
+  for_each = local.distributions
 
   source = "aaditya-2905/cloudfront/aws"
 
-  name           = each.value.name
-  domain_name    = each.value.domain_name
-  enabled        = lookup(each.value, "enabled", true)
-  default_ttl    = lookup(each.value, "default_ttl", 86400)
-  min_ttl        = lookup(each.value, "min_ttl", 0)
-  max_ttl        = lookup(each.value, "max_ttl", 31536000)
-  price_class    = lookup(each.value, "price_class", "PriceClass_100")
-  viewer_protocol_policy = lookup(each.value, "viewer_protocol_policy", "redirect-to-https")
-  compress       = lookup(each.value, "compress", true)
-  tags           = lookup(each.value, "tags", {})
+  aliases                 = each.value.aliases
+  origin                  = each.value.origin
+  origin_group            = each.value.origin_group
+  origin_access_control   = each.value.origin_access_control
+  default_cache_behavior  = each.value.default_cache_behavior
+  ordered_cache_behavior  = each.value.ordered_cache_behavior
+  custom_error_response   = each.value.custom_error_response
+  restrictions            = each.value.restrictions
+  viewer_certificate      = each.value.viewer_certificate
+  response_headers_policy = each.value.response_headers_policy
+  custom_headers          = each.value.custom_headers
+  logging_config          = each.value.logging_config
+  log_delivery            = each.value.log_delivery
+  vpc_origin              = each.value.vpc_origin
+
+  tags = merge(
+    local.common_tags,
+    each.value.tags
+  )
 }
 
 output "distribution_ids" {
