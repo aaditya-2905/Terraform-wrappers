@@ -53,8 +53,10 @@ variable "public_access_block" {
 
 variable "versioning" {
   description = "Enable versioning on the bucket"
-  type        = bool
-  default     = false
+  type = object({
+    status = string
+  })
+  default = null
 }
 
 variable "cors_rule" {
@@ -86,13 +88,8 @@ variable "acl" {
 variable "server_side_encryption" {
   description = "Server-side encryption configuration"
   type = object({
-    rule = list(object({
-      apply_server_side_encryption_by_default = object({
-        sse_algorithm       = string
-        kms_master_key_id   = optional(string)
-      })
-      bucket_key_enabled = optional(bool)
-    }))
+    sse_algorithm     = string
+    kms_master_key_id = optional(string)
   })
   default = null
 }
@@ -100,8 +97,8 @@ variable "server_side_encryption" {
 variable "replication_configuration" {
   description = "Replication configuration"
   type = object({
-    role   = string
-    rules  = list(any)
+    role  = string
+    rules = list(any)
   })
   default = null
 }
@@ -116,7 +113,7 @@ variable "lifecycle_rule" {
     abort_incomplete_multipart_upload_days = optional(number)
     expiration = optional(object({
       days                         = optional(number)
-      expired_object_delete_marker  = optional(bool)
+      expired_object_delete_marker = optional(bool)
     }))
     transition = optional(list(object({
       days          = optional(number)
