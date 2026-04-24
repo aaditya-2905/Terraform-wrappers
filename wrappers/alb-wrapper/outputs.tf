@@ -5,7 +5,7 @@ output "alb_arn" {
 
 output "alb_dns_name" {
   description = "The DNS name (URL) to access your load balancer"
-  value       = module.alb.lb_dns_name
+  value       = module.alb.alb_dns_name
 }
 
 output "target_group_arns" {
