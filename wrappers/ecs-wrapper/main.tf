@@ -19,14 +19,11 @@ locals {
 module "cluster" {
   for_each = local.clusters
 
-  source = "aaditya-2905/ecs/aws"
+  source = "../../../Tf-registry-modules/terraform-aws-ecs//modules/cluster"
 
-  name                      = each.value.name
-  capacity_providers        = each.value.capacity_providers
-  default_capacity_provider = each.value.default_capacity_provider
-  container_insights        = each.value.container_insights
-  enable_execute_command    = each.value.enable_execute_command
-  setting                   = each.value.setting
+  cluster_name       = each.value.name
+  container_insights = each.value.container_insights
+  setting            = each.value.setting
 
   tags = merge(
     local.common_tags,
@@ -41,9 +38,9 @@ module "cluster" {
 module "service" {
   for_each = local.ecs_services
 
-  source = "aaditya-2905/ecs/aws"
+  source = "../../../Tf-registry-modules/terraform-aws-ecs//modules/ecs"
 
-  cluster_name                   = each.value.cluster_name
+  cluster_id                     = try(module.cluster[each.value.cluster_name].cluster_id, each.value.cluster_name)
   service_name                   = each.value.service_name
   task_family                    = each.value.task_family
   container_name                 = each.value.container_name
