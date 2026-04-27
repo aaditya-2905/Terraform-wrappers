@@ -13,7 +13,8 @@ locals {
             cidr_blocks = ["0.0.0.0/0"]
           }
         ]
-        tags = {}
+        environment   = "prod"
+        tags          = {}
       },
       config
     )

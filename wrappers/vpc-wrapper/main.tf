@@ -38,5 +38,5 @@ output "vpc_ids" {
 
 output "vpc_cidr_blocks" {
   description = "CIDR blocks of created VPCs"
-  value       = { for k, v in module.vpc : k => v.vpc_cidr_block }
+  value       = { for k, v in local.vpcs : k => v.cidr_block }
 }
