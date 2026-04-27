@@ -19,7 +19,8 @@ locals {
 module "cluster" {
   for_each = local.clusters
 
-  source = "../../../Tf-registry-modules/terraform-aws-ecs//modules/cluster"
+  source  = "aaditya-2905/ecs/aws//modules/cluster"
+  version = "1.2.0"
 
   cluster_name       = each.value.name
   container_insights = each.value.container_insights
@@ -38,7 +39,8 @@ module "cluster" {
 module "service" {
   for_each = local.ecs_services
 
-  source = "../../../Tf-registry-modules/terraform-aws-ecs//modules/ecs"
+  source  = "aaditya-2905/ecs/aws//modules/ecs"
+  version = "1.2.0"
 
   cluster_id                     = try(module.cluster[each.value.cluster_name].cluster_id, each.value.cluster_name)
   service_name                   = each.value.service_name
