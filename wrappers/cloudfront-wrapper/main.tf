@@ -31,6 +31,7 @@ module "distribution" {
   logging_config          = each.value.logging_config
   log_delivery            = each.value.log_delivery
   vpc_origin              = each.value.vpc_origin
+  default_root_object     = each.value.default_root_object
 
   tags = merge(
     local.common_tags,
